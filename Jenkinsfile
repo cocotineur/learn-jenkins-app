@@ -42,7 +42,7 @@ pipeline {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     reuseNode true
-                    // args '-u root:root'  --> not used it because the folder in the workspace will be markes as root and cannot be e.g cleaned up/removed by jenkins if needed
+                    args '-u root:root' // --> please not used it because the folder test-results from 'npx playwright test' in the workspace will be markes as root and cannot be e.g cleaned up/removed by jenkins if needed
                 }
             }
             steps {
@@ -52,6 +52,7 @@ pipeline {
                 /* npm install serve -> prefer local installation instead of global (-g) . with local installation serve command will be set into node_module/.bin
                  */
                 sh '''
+                    rm -rf test-results
                     npm install serve 
                     node_modules/.bin/serve -s build &
                     sleep 10
